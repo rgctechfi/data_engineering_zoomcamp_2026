@@ -207,6 +207,6 @@ marimo/_lsp/
 __marimo__/
 
 #Data files
-.parquet
-.csv
-.xlsx
+*.parquet
+*.csv
+*.xlsx
