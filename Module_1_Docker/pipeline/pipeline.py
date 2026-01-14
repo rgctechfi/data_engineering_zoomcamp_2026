@@ -1,6 +1,6 @@
-# %%
+#if crash freeze for interactive python
 '''
-Command: 'c:/Users/RuruA/Documents/MEGASyncPC/Administratifs/LEARNING/IT/Data_Engineering_Zoomcamp_2026/data_engineering_zoomcamp_2026/.venv/Scripts/python.exe -m pip install ipykernel -U --force-reinstall
+Command: uv pip install ipykernel -U --force-reinstall
 import os
 os._exit(00)
 
@@ -9,20 +9,19 @@ app = JupyterFrontEnd()
 app.commands.execute('kernelmenu:restart')
 
 '''
-# %% Import
+# Import dependancies
 
 import sys
 import pandas as pd
 
-# %%
+# Get the day
 print("arguments", sys.argv)
 day = int(sys.argv[1])
 print(f"Running pipeline for day {day}")
-# %% Pandas
+
+# Dataframe
 df = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
 print(df.head())
 
+# Export to parquet
 df.to_parquet(f"output_day_{sys.argv[1]}.parquet")
-# %% Restart kernel
-
-# %%
