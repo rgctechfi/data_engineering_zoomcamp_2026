@@ -49,3 +49,8 @@ dependencies = [
     "urllib3==2.6.3",
     "wcwidth==0.2.14",
 ]
+
+[dependency-groups]
+dev = [
+    "pgcli>=4.4.0",
+]
