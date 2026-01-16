@@ -25,3 +25,10 @@ print(df.head())
 
 # Export to parquet
 df.to_parquet(f"output_day_{sys.argv[1]}.parquet")
+
+# %%
+from sqlalchemy import create_engine
+engine = create_engine('postgresql://root:root@localhost:5432/ny_taxi')
+
+
+# %%
