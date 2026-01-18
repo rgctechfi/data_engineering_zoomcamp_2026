@@ -35,7 +35,7 @@ parse_dates = [
 @click.option('--pg-user', default='root', help='PostgreSQL user')
 @click.option('--pg-pass', default='root', help='PostgreSQL password')
 @click.option('--pg-host', default='localhost', help='PostgreSQL host')
-@click.option('--pg-port', default=5432, type=int, help='PostgreSQL port')
+@click.option('--pg-port', default=5431, type=int, help='PostgreSQL port') #change port if necessary
 @click.option('--pg-db', default='ny_taxi', help='PostgreSQL database name')
 @click.option('--year', default=2021, type=int, help='Year of the data')
 @click.option('--month', default=1, type=int, help='Month of the data')
