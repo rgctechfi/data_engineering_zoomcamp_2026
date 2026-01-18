@@ -45,6 +45,7 @@ dependencies = [
     "six==1.17.0",
     "sqlalchemy>=2.0.45",
     "stack-data==0.6.3",
+    "tdqm>=0.0.1",
     "tornado==6.5.4",
     "traitlets==5.14.3",
     "tzdata==2025.3",
