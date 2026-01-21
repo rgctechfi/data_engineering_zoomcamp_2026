@@ -1,3 +1,13 @@
 # data_engineering_zoomcamp_2026
-# Module 1 : Docker
-# !!! Port 5431 au lieu de 5432
+
+## Module 1 : Docker
+
+How to use easily :
+- Start the containers with : docker-compose up
+- Stop the containers only with : docker-compose down -> avoid to erase datas in the database
+
+
+
+If 5432 connection issue -> Postgres app is installed on the PC
+The port is listenning for Postgres.exe only. postgres by docker is 'rejected'
+Change the port of the confiugration by port mapping 5431:5432 for example or stop Postgres.exe process in the task manager.
