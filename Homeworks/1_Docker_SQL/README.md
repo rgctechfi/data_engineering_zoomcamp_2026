@@ -82,13 +82,16 @@ curl -O https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/tax
 ## Question 3. Counting short trips
 
 For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2025-12-01', exclusive of the upper bound), how many trips had a `trip_distance` of less than or equal to 1 mile?
-
+```SQL
+SELECT COUNT(trip_distance)
+FROM green_taxi_data
+WHERE lpep_pickup_datetime BETWEEN '2025-11-01' AND '2025-12-01'
+AND trip_distance <= 1
+```
 - 7,853
 - 8,007
 - 8,254
 - 8,421
-
-
 ## Question 4. Longest trip for each day
 
 Which was the pick up day with the longest trip distance? Only consider trips with `trip_distance` less than 100 miles (to exclude data errors).
