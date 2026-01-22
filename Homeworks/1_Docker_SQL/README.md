@@ -21,12 +21,12 @@ pip 25.3 from /usr/local/lib/python3.13/site-packages/pip (python 3.13)
 docker run --rm --entrypoint pip taxi_ingest:v001 --version
 #OUTPUT
 pip 25.3 from /usr/local/lib/python3.13/site-packages/pip (python 3.13)
-
+```
 
 ## Question 2. Understanding Docker networking and docker-compose
 
 Given the following `docker-compose.yaml`, what is the `hostname` and `port` that pgadmin should use to connect to the postgres database?
-```
+
 
 ```yaml
 services:
@@ -60,7 +60,10 @@ volumes:
     name: vol-pgadmin_data
 ```
 <b> ANSWER:
-![alt text](image.png)
+<div align="center">
+  <img src="image.png" width="50%">
+</div>
+
 - localhost:5432
 - db:5432
 </b>
@@ -88,21 +91,33 @@ FROM green_taxi_data
 WHERE lpep_pickup_datetime BETWEEN '2025-11-01' AND '2025-12-01'
 AND trip_distance <= 1
 ```
-- 7,853
-- 8,007
-- 8,254
-- 8,421
+<b>ANSWER: 8,007</b>
+
 ## Question 4. Longest trip for each day
 
 Which was the pick up day with the longest trip distance? Only consider trips with `trip_distance` less than 100 miles (to exclude data errors).
 
 Use the pick up time for your calculations.
 
-- 2025-11-14
-- 2025-11-20
-- 2025-11-23
-- 2025-11-25
+```SQL
+SELECT 
+    trip_distance,
+    lpep_pickup_datetime
+FROM green_taxi_data
+WHERE trip_distance < 100
+ORDER BY trip_distance DESC
+LIMIT 1;
+```
 
+<b>ANSWER: 2025-11-14</b>
+
+```mermaid
+graph TD
+    Step1[FROM green_taxi_data] --> Step2[WHERE trip_distance < 100]
+    Step2 --> Step3["SELECT trip_distance, lpep_pickup_datetime"]
+    Step3 --> Step4[ORDER BY trip_distance DESC]
+    Step4 --> Step5[LIMIT 1]
+```
 
 ## Question 5. Biggest pickup zone
 
