@@ -68,20 +68,6 @@ volumes:
 - db:5432
 </b>
 
-## Prepare the Data
-
-Download the green taxi trips data for November 2025:
-
-```bash
-curl -O https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-11.parquet
-```
-
-You will also need the dataset with zones:
-
-```bash
-curl -O https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv
-```
-
 ## Question 3. Counting short trips
 
 For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2025-12-01', exclusive of the upper bound), how many trips had a `trip_distance` of less than or equal to 1 mile?
@@ -91,6 +77,23 @@ FROM green_taxi_data
 WHERE lpep_pickup_datetime BETWEEN '2025-11-01' AND '2025-12-01'
 AND trip_distance <= 1
 ```
+```mermaid
+graph TD
+    Step1[FROM green_taxi_data]
+    
+    %% Étape de filtrage temporel
+    Step1 --> Step2{"WHERE lpep_pickup_datetime <br/> BETWEEN '2025-11-01' AND '2025-12-01'"}
+    
+    %% Étape de filtrage de distance
+    Step2 --> Step3{"AND trip_distance <= 1"}
+    
+    %% Étape de comptage
+    Step3 --> Step4["SELECT COUNT(trip_distance)"]
+    
+    %% Résultat
+    Step4 --> Step5([Résultat : Nombre de trajets])
+```
+
 <b>ANSWER: 8,007</b>
 
 ## Question 4. Longest trip for each day
@@ -123,10 +126,35 @@ graph TD
 
 Which was the pickup zone with the largest `total_amount` (sum of all trips) on November 18th, 2025?
 
-- East Harlem North
-- East Harlem South
-- Morningside Heights
-- Forest Hills
+```SQL
+SELECT SUM(g.total_amount) as t,
+g."PULocationID",
+z."Zone"
+FROM green_taxi_data g
+JOIN zones z
+ON g."PULocationID" = z."LocationID"
+WHERE DATE(lpep_pickup_datetime) = '2025-11-18'
+GROUP BY "PULocationID", "Zone"
+ORDER BY t DESC
+LIMIT 1;
+
+-- OR WHERE
+WHERE g.lpep_pickup_datetime >= '2025-11-18 00:00:00' 
+  AND g.lpep_pickup_datetime < '2025-11-19 00:00:00'
+```
+
+```mermaid
+graph TD
+    Step1[FROM green_taxi_data g]
+    Step1 --> Step2["JOIN zones z ON g.PULocationID = z.LocationID"]
+    Step2 --> Step3["WHERE DATE(lpep_pickup_datetime) = '2025-11-18'"]
+    Step3 --> Step4[GROUP BY PULocationID, Zone]
+    Step4 --> Step5["SELECT SUM(total_amount) as t"]
+    Step5 --> Step6[ORDER BY t DESC]
+    Step6 --> Step7[LIMIT 1]
+```
+
+<b>ANWSER: - East Harlem North</b>
 
 
 ## Question 6. Largest tip
@@ -135,11 +163,56 @@ For the passengers picked up in the zone named "East Harlem North" in November 2
 
 Note: it's `tip` , not `trip`. We need the name of the zone, not the ID.
 
-- JFK Airport
-- Yorkville West
-- East Harlem North
-- LaGuardia Airport
 
+<b>ANSWER: - Yorkville West </b>
+
+```SQL
+SELECT 
+    z."Zone" as dropoff_zone,
+    MAX(g.tip_amount) as max_tip,
+    g.lpep_pickup_datetime
+FROM green_taxi_data g
+JOIN zones z
+    ON g."DOLocationID" = z."LocationID"
+WHERE 
+    -- 1. Filtering for the month -> extract year and month
+    TO_CHAR(g.lpep_pickup_datetime, 'YYYY-MM') = '2025-11'
+    
+    -- 2. sub query PUlocation to text zone
+    AND g."PULocationID" = (
+        SELECT "LocationID" 
+        FROM zones 
+        WHERE "Zone" = 'East Harlem North'
+    )
+-- 3. GROUP BY with aggregation MAX
+GROUP BY z."Zone",g. lpep_pickup_datetime
+ORDER BY max_tip DESC
+LIMIT 1;
+```
+
+```mermaid
+graph TD
+    %% Partie Sous-requête
+    subgraph SubQuery [Sub query : Find the ID]
+        StepA[FROM zones] --> StepB{"WHERE Zone = 'East Harlem North'"}
+        StepB --> StepC([Result : LocationID])
+    end
+
+    %% Partie Requête Principale
+    subgraph MainQuery [Main query]
+        Step1[FROM green_taxi_data g] --> Step2[JOIN zones z ON DOLocationID]
+        Step2 --> Step3{"WHERE Date = '2025-11'"}
+        Step3 --> Step4{"WHERE PULocationID = [Sub query result]"}
+        
+        %% Connexion des deux
+        StepC -.-> Step4
+
+        Step4 --> Step5[GROUP BY Zone, lpep_pickup_datetime]
+        Step5 --> Step6["SELECT MAX(tip_amount), Zone..."]
+        Step6 --> Step7[ORDER BY max_tip DESC]
+        Step7 --> Step8[LIMIT 1]
+    end
+```
 
 ## Terraform
 
