@@ -1,0 +1,14 @@
+# %%
+import pyarrow as pa
+import pandas as pd
+
+# %%
+table = pd.read_parquet('https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2025-10.parquet')
+table
+# %%
+
+# %%
+#table.columns.__array__()
+table.columns.to_numpy()
+table.columns.values
+list(table.columns)
