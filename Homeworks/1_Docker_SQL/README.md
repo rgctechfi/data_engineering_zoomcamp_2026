@@ -64,8 +64,8 @@ volumes:
   <img src="image.png" width="50%">
 </div>
 
-- localhost:5432
-- db:5432
+Hostname = service's name
+-> db:5432
 </b>
 
 ## Question 3. Counting short trips
@@ -216,15 +216,6 @@ graph TD
 
 ## Terraform
 
-In this section homework we'll prepare the environment by creating resources in GCP with Terraform.
-
-In your VM on GCP/Laptop/GitHub Codespace install Terraform.
-Copy the files from the course repo
-[here](../../../01-docker-terraform/terraform/terraform) to your VM/Laptop/GitHub Codespace.
-
-Modify the files as necessary to create a GCP Bucket and Big Query Dataset.
-
-
 ## Question 7. Terraform Workflow
 
 Which of the following sequences, respectively, describes the workflow for:
@@ -232,67 +223,17 @@ Which of the following sequences, respectively, describes the workflow for:
 2. Generating proposed changes and auto-executing the plan
 3. Remove all resources managed by terraform`
 
-Answers:
-- terraform import, terraform apply -y, terraform destroy
-- teraform init, terraform plan -auto-apply, terraform rm
-- terraform init, terraform run -auto-approve, terraform destroy
-- terraform init, terraform apply -auto-approve, terraform destroy
-- terraform import, terraform apply -y, terraform rm
+<b>Answers:
+terraform init, terraform apply -auto-approve, terraform destroy
 
+-> init is the only command that downloads providers (plugins) and configures the backend.
 
-## Submitting the solutions
+-> "Generating and executing changes" Command: terraform apply -auto-approve 
+Why not -y? The -y flag (typical of Linux/apt) does not exist in Terraform. 
+The correct option to avoid manually typing "yes" is -auto-approve. 
+Why not run? The terraform run command does not exist in the standard Terraform CLI (Open Source).
 
-* Form for submitting: https://courses.datatalks.club/de-zoomcamp-2026/homework/hw1
-
-
-## Learning in Public
-
-We encourage everyone to share what they learned. This is called "learning in public".
-
-### Why learn in public?
-
-- Accountability: Sharing your progress creates commitment and motivation to continue
-- Feedback: The community can provide valuable suggestions and corrections
-- Networking: You'll connect with like-minded people and potential collaborators
-- Documentation: Your posts become a learning journal you can reference later
-- Opportunities: Employers and clients often discover talent through public learning
-
-You can read more about the benefits [here](https://alexeyondata.substack.com/p/benefits-of-learning-in-public-and).
-
-Don't worry about being perfect. Everyone starts somewhere, and people love following genuine learning journeys!
-
-### Example post for LinkedIn
-
-```
-🚀 Week 1 of Data Engineering Zoomcamp by @DataTalksClub complete!
-
-Just finished Module 1 - Docker & Terraform. Learned how to:
-
-✅ Containerize applications with Docker and Docker Compose
-✅ Set up PostgreSQL databases and write SQL queries
-✅ Build data pipelines to ingest NYC taxi data
-✅ Provision cloud infrastructure with Terraform
-
-Here's my homework solution: <LINK>
-
-Following along with this amazing free course - who else is learning data engineering?
-
-You can sign up here: https://github.com/DataTalksClub/data-engineering-zoomcamp/
-```
-
-### Example post for Twitter/X
-
-
-```
-🐳 Module 1 of Data Engineering Zoomcamp done!
-
-- Docker containers
-- Postgres & SQL
-- Terraform & GCP
-- NYC taxi data pipeline
-
-My solution: <LINK>
-
-Free course by @DataTalksClub: https://github.com/DataTalksClub/data-engineering-zoomcamp/
-```
-
+-> "Removing all resources" Command: terraform destroy 
+Why not rm? terraform rm does not exist. There is terraform state rm, but that removes the object from Terraform's memory (state) without destroying it in the cloud. 
+To actually destroy everything, use destroy.
+</b>
