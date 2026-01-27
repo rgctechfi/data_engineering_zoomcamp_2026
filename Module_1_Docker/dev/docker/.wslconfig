@@ -1,9 +1,0 @@
-[wsl2]
-# Limite la RAM allouée à la VM WSL (et donc à Docker)
-memory=2GB
-# Autorise 4 Go d'écriture sur le disque si la RAM sature (évite le crash)
-swap=4GB
-# (Optionnel) Limite le nombre de coeurs CPU
-processors=4
-# (Optionnel mais recommandé) Force WSL à rendre la RAM à Windows quand il ne l'utilise plus
-autoMemoryReclaim=gradual
