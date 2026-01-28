@@ -67,9 +67,9 @@ services:
         datasources:
           postgres:
             url: jdbc:postgresql://kestra_postgres:5432/kestra
-            #All your services are on the same default network created by Docker Compose. 
-            #That is why in the Kestra configuration, the URL is not localhost but the name of the service: 
-            #url: jdbc:postgresql://kestra_postgres:5432/kestra
+#All your services are on the same default network created by Docker Compose. 
+#That is why in the Kestra configuration, the URL is not localhost but the name of the service: 
+#url: jdbc:postgresql://kestra_postgres:5432/kestra
             driverClassName: org.postgresql.Driver
             username: kestra
             password: k3str4
