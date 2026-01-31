@@ -30,6 +30,8 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=root
     ports:
       - "8085:80"
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin  # saving the servers
 
   kestra_postgres: # It stores your flows, execution history, and variables.
     image: postgres:18
