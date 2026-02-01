@@ -175,7 +175,7 @@ WHERE filename LIKE 'green_tripdata_2020%';
 ```sql
 SELECT count(*)
 FROM public.yellow_tripdata
-WHERE filename LIKE 'yellow_tripdata_2021-03.csv'
+WHERE filename = 'yellow_tripdata_2021-03.csv'
 ```
 <div align="center">
   <img src="Q5_sql.png" width="45%">
