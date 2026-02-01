@@ -37,8 +37,8 @@ parse_dates = [
 @click.option('--pg-host', default='localhost', help='PostgreSQL host')
 @click.option('--pg-port', default=5432, type=int, help='PostgreSQL port') #change port if necessary
 @click.option('--pg-db', default='ny_taxi', help='PostgreSQL database name')
-@click.option('--year', default=2024, type=int, help='Year of the data')
-@click.option('--month', default=11, type=int, help='Month of the data')
+@click.option('--year', default=2019, type=int, help='Year of the data') #Change the year < or = 2019
+@click.option('--month', default=11, type=int, help='Month of the data') # Change the month
 @click.option('--target-table', default='yellow_taxi_data', help='Target table name')
 @click.option('--chunksize', default=100000, type=int, help='Chunk size for reading CSV')
 def run(pg_user, pg_pass, pg_host, pg_port, pg_db, year, month, target_table, chunksize):
