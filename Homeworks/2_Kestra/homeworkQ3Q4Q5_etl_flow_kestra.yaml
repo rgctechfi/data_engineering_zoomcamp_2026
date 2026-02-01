@@ -264,7 +264,8 @@ pluginDefaults:
 triggers:
   - id: green_schedule
     type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 9 1 * *"
+    cron: "0 9 1 * *" # Minute:0 Hour:9 am the day:1 -> *:every day and *:every months
+    #  this cron expression means the task will run daily at 9:00 AM on the first day of every month.
     inputs:
       taxi: green
 

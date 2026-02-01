@@ -12,17 +12,11 @@ To get a `wget`-able link, use this prefix (note that the link itself gives 404)
 
 ### Assignment
 
-So far in the course, we processed data for the year 2019 and 2020. Your task is to extend the existing flows to include data for the year 2021.
+Data year 2019 and 2020 + a part of 2021.
 
 ![alt text](dataset.png)
 
-As a hint, Kestra makes that process really easy:
-1. You can leverage the backfill functionality in the [scheduled flow](../../../02-workflow-orchestration/flows/05_gcp_taxi_scheduled.yaml) to backfill the data for the year 2021. Just make sure to select the time period for which data exists i.e. from `2021-01-01` to `2021-07-31`. Also, make sure to do the same for both `yellow` and `green` taxi data (select the right service in the `taxi` input).
-2. Alternatively, run the flow manually for each of the seven months of 2021 for both `yellow` and `green` taxi data. Challenge for you: find out how to loop over the combination of Year-Month and `taxi`-type using `ForEach` task which triggers the flow for each combination using a `Subflow` task.
-
-### Quiz Questions
-
-Complete the quiz shown below. It's a set of 6 multiple-choice questions to test your understanding of workflow orchestration, Kestra, and ETL pipelines.
+# Quiz Questions
 
 ## *1) Within the execution for `Yellow` Taxi data for the year `2020` and month `12`: what is the uncompressed file size (i.e. the output file `yellow_tripdata_2020-12.csv` of the `extract` task)?*
 
@@ -64,9 +58,8 @@ OR
 
 <b>
 <div style="color: #5bde7e;">
- ANSWER:
 
-`green_tripdata_2020-04.csv`
+ ### <u>ANSWER: green_tripdata_2020-04.csv</u>
 
 variables:
   file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv"
@@ -104,11 +97,11 @@ file: "{{inputs.taxi}}_tripdata_{{trigger.date | date('yyyy-MM')}}.csv"
 ```
 
 You must "force" Kestra to run this flow for the 12 months of 2020.
-Go to your personnal workflow or the same as 04_postgres_taxi flow.
+Go to your personnal workflow or the same as 05_postgres_taxi_scheduled flow.
 Click on the Triggers tab (or directly on the Backfill button at the top right).
 Configure the Backfill as follows:
-    - Start Date: 2020-01-01
-    - End Date: 2020-12-31
+    - Start Date: 2020-01-01 00:00:00
+    - End Date: 2020-12-02 00:00:00
 
 <div align="center">
   <img src="backfill_yellow.png" width="45%">
@@ -134,14 +127,14 @@ WHERE filename LIKE 'yellow_tripdata_2020%';
 
 ```
 
+<div align="center">
+  <img src="Q3_yellow.png" width="30%">
+</div>
+
+ ### <u>ANSWER : 24,648,499</u>
 
 </div>
 </b>
-
-- 13,537.299
-- 24,648,499
-- 18,324,219
-- 29,430,127
 
 ## *4) How many rows are there for the `Green` Taxi data for all CSV files in the year 2020?*
 
@@ -163,7 +156,8 @@ WHERE filename LIKE 'green_tripdata_2020%';
 <div align="center">
   <img src="Q4_green.png" width="45%">
 </div>
-- 1,734,051
+
+ ### <u>1,734,051</u>
 
 
 </div>
@@ -174,10 +168,21 @@ WHERE filename LIKE 'green_tripdata_2020%';
 <b>
 <div style="color: #5bde7e;">
 
-- 1,428,092
-- 706,911
-- 1,925,152
-- 2,561,031
+<div align="center">
+  <img src="Q5_backfill_yellow.png" width="45%">
+</div>
+
+```sql
+SELECT count(*)
+FROM public.yellow_tripdata
+WHERE filename LIKE 'yellow_tripdata_2021-03.csv'
+```
+<div align="center">
+  <img src="Q5_sql.png" width="45%">
+</div>
+
+ ### <u> ANSWER: 1,925,152</u>
+
 
 </div>
 </b>
@@ -187,20 +192,23 @@ WHERE filename LIKE 'green_tripdata_2020%';
 <b>
 <div style="color: #5bde7e;">
 
+The default value of Kestra's timezone is UTC.
 
+
+```yaml
+triggers:
+  - id: daily
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 0 * * *"
+    timezone: America/New_York
+```
+
+### <u>ANSWER: Add a `timezone` property set to `America/New_York` in the `Schedule` trigger configuration</u>
 
 </div>
-</b>
-- Add a `timezone` property set to `EST` in the `Schedule` trigger configuration  
-- Add a `timezone` property set to `America/New_York` in the `Schedule` trigger configuration
-- Add a `timezone` property set to `UTC-5` in the `Schedule` trigger configuration
-- Add a `location` property set to `New_York` in the `Schedule` trigger configuration  
+</b> 
 
 ## Submitting the solutions
 
 * Form for submitting: https://courses.datatalks.club/de-zoomcamp-2026/homework/hw2
-* Check the link above to see the due date
 
-## Solution
-
-Will be added after the due date
