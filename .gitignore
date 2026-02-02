@@ -219,6 +219,7 @@ __marimo__/
 google-cloud-sdk/
 **/google-cloud-sdk/
 credentials.json
+key.json
 
 #terraform exe
 *.exe
