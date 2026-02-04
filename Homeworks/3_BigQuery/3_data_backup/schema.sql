@@ -1,0 +1,6 @@
+CREATE SCHEMA rides_dataset;;
+CREATE TABLE rides_dataset.rides(vendor_id INTEGER, tpep_pickup_datetime TIMESTAMP WITH TIME ZONE, tpep_dropoff_datetime TIMESTAMP WITH TIME ZONE, passenger_count DOUBLE, trip_distance DOUBLE, ratecode_id DOUBLE, store_and_fwd_flag VARCHAR, pu_location_id INTEGER, do_location_id INTEGER, payment_type BIGINT, fare_amount DOUBLE, extra DOUBLE, mta_tax DOUBLE, tip_amount DOUBLE, tolls_amount DOUBLE, improvement_surcharge DOUBLE, total_amount DOUBLE, congestion_surcharge DOUBLE, airport_fee DOUBLE);;
+CREATE TABLE rides_dataset._dlt_loads(load_id VARCHAR NOT NULL, schema_name VARCHAR, status BIGINT NOT NULL, inserted_at TIMESTAMP WITH TIME ZONE NOT NULL, schema_version_hash VARCHAR);;
+CREATE TABLE rides_dataset._dlt_pipeline_state("version" BIGINT NOT NULL, engine_version BIGINT NOT NULL, pipeline_name VARCHAR NOT NULL, state VARCHAR NOT NULL, created_at TIMESTAMP WITH TIME ZONE NOT NULL, version_hash VARCHAR, _dlt_load_id VARCHAR NOT NULL, _dlt_id VARCHAR NOT NULL);;
+CREATE TABLE rides_dataset._dlt_version("version" BIGINT NOT NULL, engine_version BIGINT NOT NULL, inserted_at TIMESTAMP WITH TIME ZONE NOT NULL, schema_name VARCHAR NOT NULL, version_hash VARCHAR NOT NULL, "schema" VARCHAR NOT NULL);;
+
