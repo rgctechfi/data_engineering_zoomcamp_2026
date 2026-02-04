@@ -271,3 +271,7 @@ terraform.rc
 
 #duckdb
 *.duckdb
+
+#dlt
+.dlt/secrets.toml
+secrets.toml
