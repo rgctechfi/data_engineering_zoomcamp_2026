@@ -33,13 +33,13 @@ datastorage_ingest_PROD
 - *The script use the terrform .tfvars file as a reference for pushing the data from cloudfront to GCP in the correct project and bucket*
 
 <div align="center">
-  <img src="./3_content/image.png" width="30%">
+  <img src="./3_content/image.png" width="80%">
 </div>
 
  
 ## Questions & Analysis
 
-### Question 1: Total Record Count
+# **Question 1: Total Record Count**
 
 **Query**: Count total records for 2024 Yellow Taxi Data
 
@@ -61,7 +61,7 @@ print(data)
 </b>
 ---
 
-### Question 2: Data Processing Estimation
+# **Question 2: Data Processing Estimation**
 
 **Task**: Count distinct PULocationIDs on both External Table and Materialized Table
 
@@ -92,7 +92,7 @@ OPTIONS (
 );
 ```
 <div align="center">
-  <img src="./3_content/image 1.png" width="30%">
+  <img src="./3_content/image 1.png" width="80%">
 </div>
 
 ## Materialized table:
@@ -122,7 +122,7 @@ SELECT COUNT(DISTINCT PULocationID)
 FROM `taxi-rides-ny-485214.ny_taxi_bigquery_dataset.external_yellow_tripdata`;
 ```
 <div align="center">
-  <img src="./3_content/image 2.png" width="30%">
+  <img src="./3_content/image 2.png" width="70%">
 </div>
 
 BigQuery doesn't know what's in your Parquet files on GCS before actually opening them during execution. → This is why the estimate shows 0 B:
@@ -137,7 +137,7 @@ FROM `taxi-rides-ny-485214.ny_taxi_bigquery_dataset.yellow_tripdata_partitioned`
 ```
 
 <div align="center">
-  <img src="./3_content/image 3.png" width="30%">
+  <img src="./3_content/image 3.png" width="70%">
 </div>
 
 <b>
@@ -162,7 +162,7 @@ SELECT PULocationID
 FROM `taxi-rides-ny-485214.ny_taxi_bigquery_dataset.yellow_tripdata_partitioned`;
 ```
 <div align="center">
-  <img src="./3_content/image 4.png" width="30%">
+  <img src="./3_content/image 4.png" width="70%">
 </div>
 
 **Query 2** (PULocationID + DOLocationID):
@@ -172,7 +172,7 @@ SELECT PULocationID, DOLocationID
 FROM `taxi-rides-ny-485214.ny_taxi_bigquery_dataset.yellow_tripdata_partitioned`;
 ```
 <div align="center">
-  <img src="./3_content/image 5.png" width="30%">
+  <img src="./3_content/image 5.png" width="70%">
 </div>
 
 Double the datas requierements → columnar logic
@@ -190,7 +190,7 @@ BigQuery is a columnar database, and it only scans the specific columns requeste
 
 ---
 
-### Question 4: Zero Fare Analysis
+# **Question 4: Zero Fare Analysis**
 
 **Task**: Count records with fare_amount = 0
 
@@ -206,7 +206,7 @@ WHERE fare_amount = 0;
 <div style="color: #5bde7e;">
 
 <div align="center">
-  <img src="./3_content/image 6.png" width="10%">
+  <img src="./3_content/image 6.png" width="40%">
 </div>
 
 ### <u> **Result**: 8,333</u>
@@ -261,7 +261,7 @@ WHERE tpep_dropoff_datetime >= '2024-03-01'
   AND tpep_dropoff_datetime <= '2024-03-15';
 ```
 <div align="center">
-  <img src="./3_content/image 7.png" width="30%">
+  <img src="./3_content/image 7.png" width="80%">
 </div>
 **Query on Partitioned Table**:
 
@@ -273,7 +273,7 @@ WHERE tpep_dropoff_datetime >= '2024-03-01'
   AND tpep_dropoff_datetime <= '2024-03-15';
 ```
 <div align="center">
-  <img src="./3_content/image 8.png" width="30%">
+  <img src="./3_content/image 8.png" width="80%">
 </div>
 <b>
 <div style="color: #5bde7e;">
@@ -332,7 +332,7 @@ SELECT count(*)
 FROM `taxi-rides-ny-485214.ny_taxi_bigquery_dataset.external_yellow_tripdata`
 ```
 <div align="center">
-  <img src="./3_content/image 9.png" width="30%">
+  <img src="./3_content/image 9.png" width="80%">
 </div>
 <b>
 <div style="color: #5bde7e;">
