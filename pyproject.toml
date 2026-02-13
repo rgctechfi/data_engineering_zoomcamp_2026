@@ -12,6 +12,7 @@ dependencies = [
     "colorama==0.4.6",
     "comm==0.2.3",
     "cramjam==2.11.0",
+    "dbt-duckdb>=1.10.0",
     "debugpy==1.8.19",
     "decorator==5.2.1",
     "dlt[duckdb]>=1.21.0",

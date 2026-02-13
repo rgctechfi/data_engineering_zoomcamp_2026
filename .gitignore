@@ -275,3 +275,8 @@ terraform.rc
 #dlt
 .dlt/secrets.toml
 secrets.toml
+# Data directory
+Module_4_dbt/taxi_rides_ny/data/
+
+#dbt
+profiles.yml
