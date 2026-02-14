@@ -117,6 +117,11 @@ What is the record count in the `fct_monthly_zone_revenue` model?
 
 Selected answer:
 
+```sql
+SELECT count(*) 
+FROM prod.fct_monthly_zone_revenue;
+```
+
 <p align="center">
   <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q3">
 </p>
@@ -134,6 +139,18 @@ Which pickup zone has the highest `revenue_monthly_total_amount` for Green taxis
 
 Selected answer:
 
+```sql
+SELECT 
+    pickup_zone, 
+    sum(revenue_monthly_total_amount) as total_revenue
+FROM prod.fct_monthly_zone_revenue
+WHERE taxi_type = 'Green' 
+  AND year = 2020
+GROUP BY 1
+ORDER BY total_revenue DESC
+LIMIT 1;
+```
+
 <p align="center">
   <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q4">
 </p>
@@ -150,6 +167,15 @@ Total `total_monthly_trips` for Green taxis in October 2019:
 - 421,509
 
 Selected answer:
+
+```sql
+SELECT 
+    sum(total_monthly_trips) 
+FROM prod.fct_monthly_zone_revenue
+WHERE taxi_type = 'Green' 
+  AND year = 2019 
+  AND month = 10;
+  ```
 
 <p align="center">
   <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q5">

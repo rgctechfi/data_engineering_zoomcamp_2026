@@ -3,7 +3,9 @@ import requests
 from pathlib import Path
 
 BASE_URL = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download"
-DATA_ROOT = Path("Module_4_dbt/taxi_rides_ny/data")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_ROOT = BASE_DIR / "data" / "parquet"
+DB_PATH = BASE_DIR / "data" / "database" / "taxi_rides_ny.duckdb"
 
 def download_and_convert_files(taxi_type):
     data_dir = DATA_ROOT / taxi_type
@@ -48,9 +50,9 @@ def update_gitignore():
     content = gitignore_path.read_text() if gitignore_path.exists() else ""
 
     # Add taxi data directory if not already present
-    if "Module_4_dbt/taxi_rides_ny/data/" not in content: #path here
+    if "Homeworks/4_dbt/data/parquet" not in content: #path here
         with open(gitignore_path, 'a') as f:
-            line = "Module_4_dbt/taxi_rides_ny/data/\n"
+            line = "Homeworks/4_dbt/data/parquet\n"
             f.write(f"\n# Data directory\n{line}" if content else f"# Data directory\n{line}")
 
 if __name__ == "__main__":
@@ -60,7 +62,8 @@ if __name__ == "__main__":
     for taxi_type in ["yellow", "green"]:
         download_and_convert_files(taxi_type)
 
-    con = duckdb.connect("taxi_rides_ny.duckdb")
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    con = duckdb.connect(DB_PATH.as_posix())
     con.execute("CREATE SCHEMA IF NOT EXISTS prod")
 
     for taxi_type in ["yellow", "green"]:

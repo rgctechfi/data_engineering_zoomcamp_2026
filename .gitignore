@@ -280,3 +280,5 @@ Module_4_dbt/taxi_rides_ny/data/
 
 #dbt
 profiles.yml
+# Data directory
+Homeworks/4_dbt/data/parquet
