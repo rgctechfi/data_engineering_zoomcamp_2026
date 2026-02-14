@@ -27,17 +27,28 @@ You can copy this content for export.
 - **Data**: Green & Yellow taxi (2019–2020) — load into your warehouse
 - **Run**: `dbt build --target prod`
 
+```bash
+OUTPUT:
+07:23:09  Running with dbt=1.10.19
+07:23:09  Registered adapter: duckdb=1.10.0
+07:23:10  Found 3 models, 2 sources, 472 macros
+07:23:10  
+07:23:10  Concurrency: 1 threads (target='prod')
+07:23:10  
+07:23:10  1 of 3 START sql view model prod.stg_green_tripdata ............................ [RUN]
+07:23:10  1 of 3 OK created sql view model prod.stg_green_tripdata ....................... [OK in 0.07s]
+07:23:10  2 of 3 START sql view model prod.stg_yellow_tripdata ........................... [RUN]
+07:23:10  2 of 3 OK created sql view model prod.stg_yellow_tripdata ...................... [OK in 0.03s]
+07:23:10  3 of 3 START sql view model prod.int_trips_unioned ............................. [RUN]
+07:23:10  3 of 3 OK created sql view model prod.int_trips_unioned ........................ [OK in 0.02s]
+07:23:10  
+07:23:10  Finished running 3 view models in 0 hours 0 minutes and 0.27 seconds (0.27s).
+07:23:10  
+07:23:10  Completed successfully
+07:23:10  
+07:23:10  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=3
+```
 ---
-
-## Context
-
-This README is a formatted version of `homework_dbt.md`. Questions and choices are listed below. To make colored text display correctly on GitHub, I replaced inline HTML styles with Shields.io badges — they render colors reliably in GitHub Markdown.
-
-> Example badge (replace "TBD" with your answer):
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-5bde7e" alt="Answer">
-</p>
 
 ## Questions & Choices
 
@@ -56,15 +67,11 @@ models/
 
 What will `dbt run --select int_trips_unioned` build?
 
-- `stg_green_tripdata`, `stg_yellow_tripdata`, and `int_trips_unioned` (upstream deps)
-- Any model with upstream and downstream dependencies related to `int_trips_unioned`
-- `int_trips_unioned` only
-- `int_trips_unioned`, `int_trips`, and `fct_trips` (downstream deps)
 
 Selected answer:
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q1">
+  <img src="https://img.shields.io/badge/Answer-`int_trips_unioned` only-5bde7e" alt="Answer Q1">
 </p>
 
 ---
@@ -85,16 +92,17 @@ columns:
 
 If a new value `6` appears in the source data, what happens when running `dbt test --select fct_trips`?
 
-- dbt will skip the test because the model didn't change
-- dbt will fail the test, returning a non‑zero exit code
-- dbt will pass the test with a warning
-- dbt will update the configuration to include the new value
-
 Selected answer:
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q2">
+  <img src="https://img.shields.io/badge/Answer-dbt will fail the test, returning a non‑zero exit code-lightgrey" alt="Answer Q2">
 </p>
+
+Le test est une requête SQL : Quand tu lances dbt test, dbt génère une requête qui cherche toutes les lignes où payment_type n'est PAS dans la liste [1, 2, 3, 4, 5].
+
+Le verdict : Si cette requête renvoie au moins une ligne (dans notre cas, celles avec la valeur 6), dbt considère que le test a échoué.
+
+L'impact système : Un échec de test dbt lève une erreur (rouge dans le terminal) et renvoie un exit code non-nul. C'est ce qui permet de stopper un pipeline de déploiement (CI/CD) automatique pour éviter de pousser des données corrompues en production.
 
 ---
 

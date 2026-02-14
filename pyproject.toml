@@ -17,6 +17,7 @@ dependencies = [
     "decorator==5.2.1",
     "dlt[duckdb]>=1.21.0",
     "docker==7.1.0",
+    "duckdb>=1.4.4",
     "executing==2.2.1",
     "fastparquet==2025.12.0",
     "fsspec==2026.1.0",
