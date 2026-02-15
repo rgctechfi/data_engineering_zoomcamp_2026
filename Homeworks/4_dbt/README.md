@@ -10,12 +10,8 @@ Voici la page complète en markdown avec les images dans le bon ordre. Vous pouv
 
 - **Period**: January 2024 - June 2024
 - **Data Source**: NYC Yellow Taxi Trip Records (Parquet format)
-- **Storage**: GCS Bucket
-- **Analysis Platform**: BigQuery
-
-### Infrastructure Setup
-
-You can copy this content for export.
+- **Storage**: .parquet and .db
+- **Analysis Platform**: DuckDB
 
 ---
 
@@ -48,6 +44,21 @@ OUTPUT:
 07:23:10  
 07:23:10  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=3
 ```
+
+# <b> OUT OF MEMORY FIX : using a batch logical to iterate dbt run on each month of 2019 and 2020
+Final database size: 25.25 GB
+</b>
+
+All the datas inside database duckdb(local):
+```sql
+SELECT extract(year from pickup_datetime) AS annee, count(*) FROM prod.fct_trips GROUP BY 1 ORDER BY 1;"
+┌───────┬──────────────┐
+│ annee │ count_star() │
+│ int64 │    int64     │
+├───────┼──────────────┤
+│  2019 │     87373242 │
+│  2020 │     24493276 │
+```
 ---
 
 ## Questions & Choices
@@ -70,8 +81,20 @@ What will `dbt run --select int_trips_unioned` build?
 
 Selected answer:
 
+<b>
+In dbt, the --select flag is very specific about what it executes based on the syntax you use:
+
+dbt run --select model_name: Runs ONLY that specific model. It ignores parents and children.
+
+dbt run --select +model_name: Runs the model AND all its parents (upstream dependencies).
+
+dbt run --select model_name+: Runs the model AND all its children (downstream dependencies).
+
+Since your command is just int_trips_unioned without any + signs, dbt will isolate that single node in the DAG (Direct Acyclic Graph) and build only that one table.
+</b>
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-`int_trips_unioned` only-5bde7e" alt="Answer Q1">
+  <img src="https://img.shields.io/badge/Answer-`int_trips_unioned` only-53cf74" alt="Answer Q1">
 </p>
 
 ---
@@ -95,14 +118,15 @@ If a new value `6` appears in the source data, what happens when running `dbt te
 Selected answer:
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-dbt will fail the test, returning a non‑zero exit code-lightgrey" alt="Answer Q2">
+  <img src="https://img.shields.io/badge/Answer-dbt will fail the test, returning a non‑zero exit code-53cf74" alt="Answer Q2">
 </p>
 
-Le test est une requête SQL : Quand tu lances dbt test, dbt génère une requête qui cherche toutes les lignes où payment_type n'est PAS dans la liste [1, 2, 3, 4, 5].
+<b>
+The test in dbt is a SQL query that checks all rows where payment_type IS NOT IN the list [1, 2, 3, 4, 5]. The verdict of the test is if this query returns at least one row (in our case, those with the value 6), dbt considers it as a failed test.
 
-Le verdict : Si cette requête renvoie au moins une ligne (dans notre cas, celles avec la valeur 6), dbt considère que le test a échoué.
+The system impact: A failing dbt test raises an error (red in the terminal) and returns a non-zero exit code. This allows to stop automated deployment pipelines (CI/CD) to avoid pushing corrupted data into production.
+</b>
 
-L'impact système : Un échec de test dbt lève une erreur (rouge dans le terminal) et renvoie un exit code non-nul. C'est ce qui permet de stopper un pipeline de déploiement (CI/CD) automatique pour éviter de pousser des données corrompues en production.
 
 ---
 
@@ -110,20 +134,34 @@ L'impact système : Un échec de test dbt lève une erreur (rouge dans le termin
 
 What is the record count in the `fct_monthly_zone_revenue` model?
 
-- 12,998
-- 14,120
-- 12,184
-- 15,421
-
 Selected answer:
 
 ```sql
-SELECT count(*) 
-FROM prod.fct_monthly_zone_revenue;
+duckdb data/database/taxi_rides_ny.duckdb "SELECT count(*) FROM prod.fct_monthly_zone_revenue;"
+
+┌──────────────┐
+│ count_star() │
+│    int64     │
+├──────────────┤
+│    11812     │
+└──────────────┘
 ```
+Not the same value for me.
+
+```sql
+duckdb data/database/taxi_rides_ny.duckdb "SELECT count(distinct revenue_month) FROM prod.fct_monthly_zone_revenue;"
+
+┌───────────────────────────────┐
+│ count(DISTINCT revenue_month) │
+│             int64             │
+├───────────────────────────────┤
+│              24               │
+└───────────────────────────────┘
+```
+I have all the months inside
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q3">
+  <img src="https://img.shields.io/badge/Answer-12,184-53cf74" alt="Answer Q3">
 </p>
 
 ---
@@ -140,19 +178,24 @@ Which pickup zone has the highest `revenue_monthly_total_amount` for Green taxis
 Selected answer:
 
 ```sql
+duckdb data/database/taxi_rides_ny.duckdb "
 SELECT 
     pickup_zone, 
     sum(revenue_monthly_total_amount) as total_revenue
 FROM prod.fct_monthly_zone_revenue
-WHERE taxi_type = 'Green' 
-  AND year = 2020
+WHERE service_type = 'Green'
+  AND extract(year from revenue_month) = 2020
 GROUP BY 1
 ORDER BY total_revenue DESC
-LIMIT 1;
-```
+LIMIT 1;"
 
+    pickup_zone    │ total_revenue │
+│      varchar      │ decimal(38,3) │
+├───────────────────┼───────────────┤
+│ East Harlem North │  1814667.640 
+```
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q4">
+  <img src="https://img.shields.io/badge/Answer-East Harlem North-53cf74" alt="Answer Q4">
 </p>
 
 ---
@@ -169,16 +212,24 @@ Total `total_monthly_trips` for Green taxis in October 2019:
 Selected answer:
 
 ```sql
+duckdb data/database/taxi_rides_ny.duckdb "
 SELECT 
-    sum(total_monthly_trips) 
+    service_type,
+    sum(total_monthly_trips) as total_trips
 FROM prod.fct_monthly_zone_revenue
-WHERE taxi_type = 'Green' 
-  AND year = 2019 
-  AND month = 10;
+WHERE service_type = 'Green'
+  AND extract(year from revenue_month) = 2019
+  AND extract(month from revenue_month) = 10
+GROUP BY 1;"
   ```
 
+  │ service_type │ total_trips │
+│   varchar    │   int128    │
+├──────────────┼─────────────┤
+│ Green        │   384624    │
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q5">
+  <img src="https://img.shields.io/badge/Answer-384624-53cf74" alt="Answer Q5">
 </p>
 
 ---
@@ -189,37 +240,37 @@ Create `stg_fhv_tripdata` for 2019 FHV data, filter `dispatching_base_num IS NOT
 
 What is the record count for `stg_fhv_tripdata`?
 
-- 42,084,899
-- 43,244,693
-- 22,998,722
-- 44,112,187
-
 Selected answer:
 
+```bash
+dbt run --select stg_fhv_tripdata --target prod
+08:58:07  Running with dbt=1.10.19
+08:58:07  Registered adapter: duckdb=1.10.0
+08:58:08  Found 9 models, 2 seeds, 26 data tests, 3 sources, 618 macros
+08:58:08  
+08:58:08  Concurrency: 1 threads (target='prod')
+08:58:08  
+08:58:08  1 of 1 START sql view model prod.stg_fhv_tripdata .............................. [RUN]
+08:58:08  1 of 1 OK created sql view model prod.stg_fhv_tripdata ......................... [OK in 0.06s]
+08:58:08  
+08:58:08  Finished running 1 view model in 0 hours 0 minutes and 0.17 seconds (0.17s).
+08:58:08  
+08:58:08  Completed successfully
+08:58:08  
+08:58:08  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+```
+```sql
+duckdb data/database/taxi_rides_ny.duckdb "SELECT count(*) FROM prod.stg_fhv_tripdata"
+┌─────────────────┐
+│  count_star()   │
+│      int64      │
+├─────────────────┤
+│    43244693     │
+│ (43.24 million) │
+```
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Answer-TBD-lightgrey" alt="Answer Q6">
+  <img src="https://img.shields.io/badge/Answer-43,244,693-53cf74" alt="Answer Q6">
 </p>
 
 ---
-
-## Notes on color display in GitHub
-
-- GitHub sanitizes most inline `style` attributes in Markdown, so inline color styling (e.g. `<div style="color:#...">`) is often removed.
-- Recommended solution: use Shields.io badges or hosted SVG images. Badges are quick and reliably render colors on GitHub.
-- To change a badge color, replace `TBD` and `lightgrey` in the badge URL:
-
-```
-https://img.shields.io/badge/Answer-VALUE-<color>
-```
-
-Valid color examples: `brightgreen`, `green`, `yellow`, `orange`, `red`, `blue`, `lightgrey`.
-
----
-
-If you want me to fill the badges with the correct answers (green for chosen answers, grey for others), tell me which choices to mark and I'll update the file.
-
-Would you like me to populate answers and add short explanations for each question?
-
-Si vous voulez que je remplisse les badges avec les réponses correctes (ou vos choix), dites‑moi lesquelles et je mettrai à jour les badges en vert pour les réponses choisies et en gris pour les non‑sélectionnées.
-
-Bon travail — voulez‑vous que je remplisse les réponses et ajoute des explications pour chaque question ?

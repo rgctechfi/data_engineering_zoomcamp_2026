@@ -1,3 +1,5 @@
+#In terminal or python script version:
+
 import duckdb
 
 con = duckdb.connect('Homeworks/4_dbt/data/database/taxi_rides_ny.duckdb')

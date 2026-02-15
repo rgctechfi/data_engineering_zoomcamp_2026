@@ -36,7 +36,7 @@ renamed as (
 
 select * from renamed
 -- Avoid to fullfill the ram
-where pickup_datetime >= '2019-01-01' and pickup_datetime <= '2019-12-31'
+where pickup_datetime >= '2019-01-01' and pickup_datetime <= '2020-12-31'
 
 -- Sample records for dev environment using deterministic date filter
 {% if target.name == 'dev' %}

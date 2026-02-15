@@ -1,9 +1,6 @@
-{{
-    config(
-        materialized='incremental',
-        unique_key='trip_id'
-    )
-}}
+-- Enrich and deduplicate trip data
+-- Demonstrates enrichment and surrogate key generation
+-- Note: Data quality analysis available in analyses/trips_data_quality.sql
 
 with unioned as (
     select * from {{ ref('int_trips_unioned') }}
@@ -58,15 +55,7 @@ cleaned_and_enriched as (
 
 select * from cleaned_and_enriched
 
--- BATCH PROCESSING
--- If we give a variable 'date_range', we will only process this month's data. Otherwise (in production run), 
--- we will process all the data, but make sure to be careful with memory usage as it can be quite large
-{% if var('date_range', none) is not none %}
-where pickup_datetime >= cast('{{ var("date_range") }}-01' as date)
-  and pickup_datetime < cast('{{ var("date_range") }}-01' as date) + interval 1 month
-{% endif %}
-
--- The QUALIFY statement will only run on the "small" month filtered out above
+-- Deduplicate: if multiple trips match (same vendor, second, location, service), keep first
 qualify row_number() over(
     partition by vendor_id, pickup_datetime, pickup_location_id, service_type
     order by dropoff_datetime
