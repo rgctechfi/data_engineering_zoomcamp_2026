@@ -221,13 +221,13 @@ WHERE service_type = 'Green'
   AND extract(year from revenue_month) = 2019
   AND extract(month from revenue_month) = 10
 GROUP BY 1;"
-  ```
+
 
   │ service_type │ total_trips │
 │   varchar    │   int128    │
 ├──────────────┼─────────────┤
 │ Green        │   384624    │
-
+  ```
 <p align="center">
   <img src="https://img.shields.io/badge/Answer-384624-53cf74" alt="Answer Q5">
 </p>
