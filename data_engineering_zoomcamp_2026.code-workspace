@@ -23,6 +23,24 @@
 				"previewLimit": 50,
 				"driver": "DuckDB"
 			}
+		],
+		"dbt.enableNewLineagePanel": true,
+		"dbcode.connections": [
+			{
+				"connectionId": "Pn2LvhLMA0GiDDksMeNqO",
+				"name": "taxi_rides_ny.duckdb",
+				"driver": "duckdb",
+				"color": "#F9F871",
+				"connectionType": "socket",
+				"socket": "data_engineering_zoomcamp_2026/Homeworks/4_dbt/data/database/taxi_rides_ny.duckdb",
+				"driverOptions": {
+					"fileSearchPath": "database",
+					"extensions": []
+				},
+				"readOnly": true,
+				"postConnectionSqlType": "inline",
+				"pinnedConnectionTimeout": "0"
+			}
 		]
 	}
 }

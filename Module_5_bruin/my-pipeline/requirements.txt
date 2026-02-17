@@ -1,0 +1,2 @@
+# Local Bruin Python asset deps for this pipeline.
+# Keep empty/minimal to avoid installing unrelated repo dependencies.

@@ -282,3 +282,8 @@ Module_4_dbt/taxi_rides_ny/data/
 profiles.yml
 # Data directory
 Homeworks/4_dbt/data/parquet
+
+.bruin.yml
+logs/runs
+logs/*.log
+*.py[cod]
