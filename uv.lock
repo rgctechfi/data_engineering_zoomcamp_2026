@@ -442,6 +442,7 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "stack-data" },
     { name = "tdqm" },
+    { name = "tldr" },
     { name = "tornado" },
     { name = "traitlets" },
     { name = "tzdata" },
@@ -503,6 +504,7 @@ requires-dist = [
     { name = "sqlalchemy", specifier = ">=2.0.45" },
     { name = "stack-data", specifier = "==0.6.3" },
     { name = "tdqm", specifier = ">=0.0.1" },
+    { name = "tldr", specifier = ">=3.4.4" },
     { name = "tornado", specifier = "==6.5.4" },
     { name = "traitlets", specifier = "==5.14.3" },
     { name = "tzdata", specifier = "==2025.3" },
@@ -2738,6 +2740,15 @@ wheels = [
 ]
 
 [[package]]
+name = "shtab"
+version = "1.8.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b0/7a/7f131b6082d8b592c32e4312d0a6da3d0b28b8f0d305ddd93e49c9d89929/shtab-1.8.0.tar.gz", hash = "sha256:75f16d42178882b7f7126a0c2cb3c848daed2f4f5a276dd1ded75921cc4d073a", size = 46062, upload-time = "2025-11-18T10:57:47.601Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8e/e1/202a31727b0d096a04380f78e809074d7a1d0a22d9d5a39fea1d2353fd02/shtab-1.8.0-py3-none-any.whl", hash = "sha256:f0922a82174b4007e06ac0bac4f79abd826c5cca88e201bfd927f889803c571d", size = 14457, upload-time = "2025-11-18T10:57:45.906Z" },
+]
+
+[[package]]
 name = "simplejson"
 version = "3.20.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2899,6 +2910,15 @@ wheels = [
 ]
 
 [[package]]
+name = "termcolor"
+version = "3.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/46/79/cf31d7a93a8fdc6aa0fbb665be84426a8c5a557d9240b6239e9e11e35fc5/termcolor-3.3.0.tar.gz", hash = "sha256:348871ca648ec6a9a983a13ab626c0acce02f515b9e1983332b17af7979521c5", size = 14434, upload-time = "2025-12-29T12:55:21.882Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/33/d1/8bb87d21e9aeb323cc03034f5eaf2c8f69841e40e4853c2627edf8111ed3/termcolor-3.3.0-py3-none-any.whl", hash = "sha256:cf642efadaf0a8ebbbf4bc7a31cec2f9b5f21a9f726f4ccbb08192c9c26f43a5", size = 7734, upload-time = "2025-12-29T12:55:20.718Z" },
+]
+
+[[package]]
 name = "terminado"
 version = "0.18.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2931,6 +2951,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7a/fd/7a5ee21fd08ff70d3d33a5781c255cbe779659bd03278feb98b19ee550f4/tinycss2-1.4.0.tar.gz", hash = "sha256:10c0972f6fc0fbee87c3edb76549357415e94548c1ae10ebccdea16fb404a9b7", size = 87085, upload-time = "2024-10-24T14:58:29.895Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e6/34/ebdc18bae6aa14fbee1a08b63c015c72b64868ff7dae68808ab500c492e2/tinycss2-1.4.0-py3-none-any.whl", hash = "sha256:3a49cf47b7675da0b15d0c6e1df8df4ebd96e9394bb905a5775adb0d884c5289", size = 26610, upload-time = "2024-10-24T14:58:28.029Z" },
+]
+
+[[package]]
+name = "tldr"
+version = "3.4.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "shtab" },
+    { name = "termcolor" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/56/2a/3a55692e24d879ae6e8d15c08b0ecdc76ba92ee8160b4dac8a07bfff021e/tldr-3.4.4.tar.gz", hash = "sha256:8355f2ca96991c61a2daa166050af5d3bdf93507817fcde5de36259c3908eca1", size = 17901, upload-time = "2026-02-07T18:18:54.263Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a7/d6/f84aa2548de0d6fbf3aa2dd0b750ade13b7ed2aa110907859f624f02b0ac/tldr-3.4.4-py3-none-any.whl", hash = "sha256:060e0f11e71b97658b3e6de384a0b28069820a20a4070ffae91c6f9a3167430a", size = 14145, upload-time = "2026-02-07T18:18:52.797Z" },
 ]
 
 [[package]]
